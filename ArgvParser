@@ -1,6 +1,6 @@
 require 'singleton'
 
-module jamandbees
+module Jamandbees
   class ArgvParser
 
 =begin
