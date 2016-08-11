@@ -5,7 +5,7 @@ module Jamandbees
 
 =begin
 Usage:
-arguments = CI::ArgvParser.instance
+arguments = Jamandbees::ArgvParser.instance
 
 To retrieve a boolean argument, call the script with:
 ruby example.rb --someboolargument
