@@ -1,0 +1,94 @@
+require 'singleton'
+
+module jamandbees
+  class ArgvParser
+
+=begin
+Usage:
+arguments = CI::ArgvParser.instance
+
+To retrieve a boolean argument, call the script with:
+ruby example.rb --someboolargument
+and parse with
+arguments.find_boolean?(someboolargument)
+
+To retrieve a string argument, call the script with:
+ruby example.rbn --somestringargument string
+and parse with
+value = arguments.find_argument("somestringargument")
+=end
+    include ::Singleton
+
+    attr_accessor :help
+    attr_reader :debug_arguments
+
+    def initialize()
+      @arguments = ARGV.dup
+      #Preserve the contents of ARGV for debugging the initial state.
+      @debug_arguments = ARGV.dup
+      @help = ""
+    end
+
+    def debug_output
+      debug_arguments
+    end
+
+    def find_boolean?(*boolean_flags)
+      discovered = false
+
+      boolean_flags.each do |flag|
+        if arguments.include?(flag)
+          discovered = true
+          arguments.delete(flag)
+        end
+      end
+
+      return discovered
+    end
+
+    def remainder
+      return arguments
+    end
+
+    #Retrieve the arguments to the options.
+    #Assumes that there are no spaces in the arguments.
+    #Usage: retrieve_argument("--user", "-u")
+    #Note that each time retrieve_argument is called, it expects
+    #to be given a single grouping of options, so the following
+    #signature would be invalid:
+    #retrieve_argument("--user", "--groups", "-u", "-g")
+    def retrieve_argument(*options)
+      if (options.size > 2)
+        raise(RetrieveArgumentException, "More than two options given. Not sure how to parse <#{options}>")
+      end
+
+      argument = nil
+
+      options.each do |option|
+        if (option_index = arguments.find_index(option))
+          argument_index = option_index + 1
+          argument = arguments[argument_index]
+
+          arguments.delete_at(argument_index)
+          arguments.delete_at(option_index)
+        end
+      end
+
+      return argument
+    end
+
+    def shift
+      return arguments.shift
+    end
+
+    def size
+      return arguments.size
+    end
+
+    private
+    attr_accessor :arguments
+  end
+
+  class RetrieveArgumentException < StandardError
+  end
+end
