@@ -1,11 +1,11 @@
 require 'singleton'
 
 module Jamandbees
-  class ArgvParser
+  class ShinyArgs
 
 =begin
 Usage:
-arguments = Jamandbees::ArgvParser.instance
+arguments = Jamandbees::ShinyArgs.instance
 
 To retrieve a boolean argument, call the script with:
 ruby example.rb --someboolargument
